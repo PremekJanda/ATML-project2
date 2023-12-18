@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT-like Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Chatbot</h1>
+    
+        <div id="chat-container"></div>
+        
+        <form action="" id="questionForm">
+            <input type="text" id="messageInput" placeholder="Type a message..." focused>
+            <button id="send-button" type="submit">Send</button>
+        </form>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script type="text/javascript" scr="{{ url_for('static', filename='javascript/app.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
