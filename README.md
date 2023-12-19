@@ -12,6 +12,10 @@ The options for the datasets for this task were
 
 ## Tasks
 [Link to tutorials](https://drive.google.com/drive/folders/1d8cwe1BSvUhtO4gCgVciIEn2p5tqZsFd)
+The tasks listed below are only suggestions. You don’t need to perform exactly these tasks (for some
+datasets they may not even be appropriate). 
+Any ideas?
+
 ### 1. Investigate dataset:
 Briefly describe the chosen dataset:
 - First tutorial 
