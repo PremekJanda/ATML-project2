@@ -1,4 +1,5 @@
 import os, librosa, audioread, uuid, wave
+import numpy as np
 from pydub import AudioSegment
 from pydub.effects import normalize
 from flask import Flask, render_template, jsonify, send_file, url_for
@@ -11,15 +12,27 @@ audioread.ffdec.FFmpegAudioFile = audioread.ffdec.FFmpegAudioFile
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'secret!'
 app.config['UPLOAD_FOLDER'] = 'static/audio'
+# True == "speech", False == "text"
+app.config['RESPONSE_TYPE'] = False
 socketio = SocketIO(app)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@socketio.on('message')
-def handle_message(msg):
-    socketio.emit('message', msg)
+# @socketio.on('message')
+# def handle_message(msg):
+#     socketio.emit('message', msg)    
+
+@app.route('/change_response', methods=['POST'])
+def change_response():
+    if request.data.decode() == "true":
+        app.config['RESPONSE_TYPE'] = True
+    else:
+        app.config['RESPONSE_TYPE'] = False
+        
+    return jsonify({'success': True, 'message': app.config['RESPONSE_TYPE']})
+
     
 @app.route('/send_response', methods=['POST'])
 def send_response():
@@ -28,13 +41,19 @@ def send_response():
     message: str = content.get('message', '')
     
     #### THIS IS WHERE MAGIC HAPPENS ###
-    print(message)
+    # TODO create answer
+    message = message.upper()
 
-    if message:
-        socketio.emit('message', {'user': user, 'msg': message})
-        return jsonify({'success': True, 'message': message.upper()})
-    else:
-        return jsonify({'success': False, 'message': message.upper()})
+    ### HERE MAGIC HAPPENS ###
+    # answer in speech
+    if app.config['RESPONSE_TYPE']:
+        # TODO convert text to speech
+
+        # Send the processed audio file back to the client
+        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], "input-audio-id-1.webm"), as_attachment=True) # TODO change
+    # answer in text
+    else:        
+        return jsonify({'success': True, 'message': message})
 
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
@@ -43,28 +62,41 @@ def process_audio():
         return 'No audio file provided', 400
 
     audio_file = request.files['audio']
-    print(request.form['name'])
 
     if audio_file:
         # Save the uploaded audio file
         audio_file_path = os.path.join(app.config['UPLOAD_FOLDER'], f"input-{request.form['name']}.webm")
         audio_file.save(audio_file_path)
+        
+        audio = AudioSegment.from_file(audio_file_path, format='webm')
+        
+        audio_array = np.array(audio.get_array_of_samples())
+        
+        ### TODO convert speech to text ###
+        
+        message = "response in text".upper() # TODO remove
+        
+        # answer in speech
+        if app.config['RESPONSE_TYPE']:
+            # TODO create audio fron the answer
+            # Perform some processing (e.g., noise removal)
+            processed_audio = normalize(audio)
 
-        # Load the audio file using pydub
-        # audio = librosa.load(audio_file_path, sr=48000)
-        # audio = librosa.load(audio_file_path)
-        audio = read(audio_file_path)
-        # audio = AudioSegment.from_wav(audio_file_path)
+            # Save the processed audio file
+            processed_audio_path = os.path.join(app.config['UPLOAD_FOLDER'], f"processed-{request.form['name']}.webm")
+            # processed_audio.export(processed_audio_path, format='wav')
+            processed_audio.export(processed_audio_path, format='webm')
 
-        # Perform some processing (e.g., noise removal)
-        processed_audio = normalize(audio)
-
-        # Save the processed audio file
-        processed_audio_path = os.path.join(app.config['UPLOAD_FOLDER'], f"processed-{request.form['name']}.webm")
-        processed_audio.export(processed_audio_path, format='wav')
-
-        # Send the processed audio file back to the client
-        return send_file(processed_audio_path, as_attachment=True)
+            # Send the processed audio file back to the client
+            return send_file(processed_audio_path, as_attachment=True)
+        # answer in text
+        else:
+            return jsonify({'success': True, 'message': message})
+            
+            
+            
+        
+    
 
 # # file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 

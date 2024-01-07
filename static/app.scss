@@ -6,13 +6,11 @@ body {
     width: 8px;
 }
 
-/* Style the thumb */
 ::-webkit-scrollbar-thumb {
     background-color: #c0c0c0;
     border-radius: .5rem;
 }
 
-/* Style the track (background) */
 ::-webkit-scrollbar-track {
     background-color: transparent;
 }
@@ -30,7 +28,7 @@ h1 {
     width: 80%;
     margin: auto;
     padding: 20px;
-    border: 1px solid black;
+    border: 1px solid gray;
     border-radius: .5rem; 
     overflow-y: scroll;
     box-sizing: border-box;
@@ -46,7 +44,7 @@ form {
 #messageInput {
     width: -webkit-fill-available;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid gray;
     border-radius: 5px;
 }
 
@@ -110,4 +108,49 @@ form {
 }
 #downloadButton { 
     display: none;
+}
+
+#toggle {
+    appearance: none;
+    height: 2rem;
+    width: 5.75rem;
+    display: inline-block;
+    position: relative;
+    border-radius: 2rem;
+    overflow: hidden;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color ease-in 0.3s;
+    background-color: #43805e;
+    margin: .5rem 10%;
+
+    &:before {
+        content: "speech   text";
+        font: 12px/1.5rem Helvetica;
+        display: block;
+        position: absolute;
+        z-index: 2;
+        width: 1.5rem;
+        height: 1.5rem;                                     
+        background-color: #e7e7e7;
+        left: 2px;
+        top: 4px;
+        border-radius: 50%;
+        text-indent: -3rem;
+        word-spacing: 3rem;
+        color: white;
+        white-space: nowrap;
+        text-shadow: 0 -1px 1px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.75);
+        transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+    }
+
+    &:checked {
+        background-color: #4c89d9;
+    
+        &:before {
+            left: 4rem;
+        }
+    }
 }

@@ -10,32 +10,21 @@
     <main>
         <h1>Chatbot</h1>
     
+        <input id="toggle" type="checkbox"></inpu>
         <div id="chat-container"></div>
-        
         <form action="" id="questionForm">
             <input type="text" id="messageInput" placeholder="Send a request..." focused>
             <button id="send-button" type="submit" class="button">Send</button>
             <div id="startButton" class="button"><img src="{{ url_for('static', filename='img/microphone.png') }}" width="20"></img></div>
             <div id="stopButton" class="button"><img src="{{ url_for('static', filename='img/stop-button.png') }}" width="20"></img></div>
         </form>
-
-        <!--
-        <button id="startRecord">Start Recording</button>
-        <button id="stopRecord" disabled>Stop Recording</button>
-        <button id="sendToServer" disabled>Send to Server</button>
-
-        <audio id="audioPlayer" controls></audio> 
-        --> 
         
-        <audio id="preview" autoplay muted></audio>
-        <audio id="recording" controls></audio>
+        <audio id="recording" autoplay muted></audio>
         <a id="downloadButton">Download</a>
 
         <p id="log"></p>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script type="text/javascript" scr="{{ url_for('static', filename='javascript/app.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
