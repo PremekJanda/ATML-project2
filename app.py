@@ -14,7 +14,6 @@ import whisper
 import json
 import pickle
 import hnswlib
-from transformers import T5Tokenizer, T5ForConditionalGeneration
 from transformers import pipeline
 
 # # # # # # # # # # # # # # # # 
@@ -193,8 +192,7 @@ def send_response():
             semb_model,
             index,
             xenc_model,
-            model,
-            tokenizer,
+            nlp,
             device,
     )
 
@@ -243,8 +241,7 @@ def process_audio():
                     semb_model,
                     index,
                     xenc_model,
-                    model,
-                    tokenizer,
+                    nlp,
                     device,
         )
         
@@ -298,7 +295,7 @@ if __name__ == "__main__":
             "NVIDIA/DeepLearningExamples:torchhub", "nvidia_tts_utils"
         )
         # Load the models and contexts
-        semb_model, index, xenc_model, model, tokenizer, device = load_qa_pipeline()
+        semb_model, index, xenc_model, nlp, device = load_qa_pipeline()
         _, unique_contexts = read_data()
 
     # Set the ngrok API key (You can sign up at https://dashboard.ngrok.com/signup)
