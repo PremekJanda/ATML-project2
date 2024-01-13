@@ -15,6 +15,7 @@ import json
 import pickle
 import hnswlib
 from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import pipeline
 
 # # # # # # # # # # # # # # # # 
 ## Normal functions
@@ -72,10 +73,10 @@ def load_qa_pipeline():
 
     pairs, unique_contexts = read_data()
 
-    tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large")
-    model = T5ForConditionalGeneration.from_pretrained(
-        "google/flan-t5-large", device_map="auto", torch_dtype=torch.float16
-    )
+    model_name = "deepset/roberta-base-squad2"
+
+    # a) Get predictions
+    nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
 
     # Define hnswlib index path
     embeddings_cache_path = './qa_embeddings_cache.pkl'
@@ -115,7 +116,7 @@ def load_qa_pipeline():
         print(f'Saving index to: {index_path}')
         index.save_index(index_path)
 
-    return semb_model, index, xenc_model, model, tokenizer, device
+    return semb_model, index, xenc_model, nlp, device
 
 
 def qa_pipeline(
@@ -124,8 +125,7 @@ def qa_pipeline(
     similarity_model,
     embeddings_index,
     re_ranking_model,
-    generative_model,
-    tokenizer,
+    nlp,
     device,
 ):
     if not question.endswith("?"):
@@ -141,16 +141,16 @@ def qa_pipeline(
     # Get best matching passage
     passage_idx = np.argsort(-cross_scores)[0]
     passage = unique_contexts[corpus_ids[0][passage_idx]]
+    
     # Encode input
-    input_text = f"Given the following passage, answer the related question.\n\nPassage:\n\n{passage}\n\nQ: {question}"
-
-    input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to(device)
-    # Generate output
-    output_ids = generative_model.generate(input_ids, max_new_tokens=512)
-    # Decode output
-    output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-
+    QA_input = {
+    'question': question,
+    'context': passage
+    }
+    res = nlp(QA_input)
+    output_text = res["answer"]
     # Return result
+    
     return output_text
 # # # # # # # # # # # # # # # # 
 ## Flask API calls
