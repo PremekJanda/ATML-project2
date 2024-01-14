@@ -78,7 +78,7 @@ def load_qa_pipeline():
     nlp = pipeline('question-answering', model=model_name, tokenizer=model_name)
 
     # Define hnswlib index path
-    embeddings_cache_path = './qa_embeddings_cache.pkl'
+    embeddings_cache_path = './qa_embeddings_cache_ui.pkl'
 
     # Load cache if available
     if os.path.exists(embeddings_cache_path):
@@ -98,7 +98,7 @@ def load_qa_pipeline():
     index = hnswlib.Index(space='cosine', dim=corpus_embeddings.size(1))
 
     # Define hnswlib index path
-    index_path = './qa_hnswlib_100.index'
+    index_path = './qa_hnswlib_100_ui.index'
 
     # Load index if available
     if os.path.exists(index_path):
