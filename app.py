@@ -46,7 +46,7 @@ def speech2text(audio_path):
     return result["text"]
 
 def read_data():
-    file_path = "./train-v2.0.json"
+    file_path = "'./data/train-v2.0.json'"
     with open(file_path, "rb") as f:
         # Load the data
         data_dict = json.load(f)
