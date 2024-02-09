@@ -31,4 +31,4 @@ Use text-to-speech and speech-to-text models to add voice interaction to the bes
 - Fifth tutorial
 
 ### 4. Potential extensions:
-- Any ideas?
+- Created an app with text-to-speech and speech-to-text interactivity.
